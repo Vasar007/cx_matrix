@@ -92,13 +92,15 @@ constexpr auto get_random(int count) noexcept
     return pcg();
 }
 
+} // namespace cx_random
+
 /*
  * Example oof usage:
+ *
  * int main()
  * {
  *     constexpr auto r = get_random(10);
  *     return r;
  * }
+ *
  */
-
-} // namespace cx_random

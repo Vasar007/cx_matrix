@@ -241,3 +241,54 @@ void print(const Container& container)
 }
 
 } // namesapce vv
+
+/*
+ * Example of usage:
+ *
+ * #include <iostream>
+ * #include <array>
+ * #include <cassert>
+ * #include <iterator>
+ * #include <algorithm>
+ * 
+ * #include "cx_math.h"
+ * #include "cx_functions.hpp"
+ * 
+ * 
+ * 
+ * int main()
+ * {
+ *     constexpr std::size_t NUM_OF_VALUES = 11u;
+ *     constexpr std::array<double, NUM_OF_VALUES> values = 
+ *     	   { 0.2, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.3 };
+ *
+ *     constexpr auto results = vv::do_work(values);
+ *    
+ *     std::cout.precision(10u);
+ *     std::cout << std::fixed;
+ *     std::cout << "NUMBER: |";
+ *     std::cout << "RESULT:       | ";
+ *     std::cout << "REAL RESULT: | ";
+ *     std::cout << "DELTA: \n";
+ *     for (std::size_t i = 0u; i < NUM_OF_VALUES; ++i)
+ *     {
+ *         std::cout << i << (i != 10u ? "       | " : "      | ");
+ *         std::cout << results.at(0u).at(i) << " | ";
+ *         std::cout << results.at(1u).at(i) << " | ";
+ *         std::cout << cx::abs(results.at(1u).at(i) - results.at(0u).at(i)) << '\n';
+ *        
+ *         std::cout << "SQRT:        " << results.at(2u).at(i) << '\n';
+ *         std::cout << "REAL SQRT:   " << results.at(5u).at(i) << '\n';
+ *
+ *         std::cout << "SIN:         " << results.at(3u).at(i) << '\n';
+ *         std::cout << "REAL SIN:    " << results.at(6u).at(i) << '\n';
+ *        
+ *         std::cout << "COS:         " << results.at(4u).at(i) << '\n';
+ *         std::cout << "REAL COS:    " << results.at(7u).at(i) << "\n\n";
+ *     }
+ * 
+ *     std::cin.get();
+ *     return 0;
+ * }
+ *
+ */

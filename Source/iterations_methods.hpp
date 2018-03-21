@@ -252,7 +252,7 @@ TEST_METHOD(seidel_test_solve)
 
 TEST_METHOD(gen_test_diagonal_predominance)
 {
-    cx_loops::static_for_s<50u>([] (const auto Index)
+    cx_loops::static_for_s<10u>([] (const auto Index)
     {
         if constexpr (Index > 2u)
         {
@@ -268,7 +268,7 @@ TEST_METHOD(gen_test_diagonal_predominance)
             std::cout << "Number of iterations Seidel" << Index << ":\n" << x2.second;
             std::cout << "\n\n------------------------------------\n\n";
 
-            if constexpr (Index % 10u == 0u)
+            if constexpr (Index % 5u == 0u)
             {
                 utils::pause_clear("\nPress Enter to continue ELIMINATION...");
             }            
@@ -278,60 +278,6 @@ TEST_METHOD(gen_test_diagonal_predominance)
             using namespace std::chrono_literals;
             std::cout << "Initiate ELIMINATION " << (3u - Index) << "...\n";
             std::this_thread::sleep_for(1s);
-        }
-    });
-
-    cx_loops::static_for_s<75u>([] (const auto Index)
-    {
-        if constexpr (Index > 50u)
-        {
-            constexpr auto A = generate_matrix_with_diagonal_predominance<double, Index, Index>();
-            constexpr auto b = generate_matrix<double, Index, 1u>();
-            constexpr auto x1 = jacobi_solve(A, b, kEps);
-            constexpr auto x2 = seidel_solve(A, b, kEps);
-            std::cout << "Matrix A" << Index << ":\n" << A << "\n\n";
-            std::cout << "Matrix b" << Index << ":\n" << b << "\n\n";
-            std::cout << "Matrix x" << Index << ":\n" << x1.first << "\n\n";
-            std::cout << "Number of iterations Jacobi" << Index << ":\n" << x1.second << "\n\n";
-            std::cout << "Matrix x" << Index << ":\n" << x2.first << "\n\n";
-            std::cout << "Number of iterations Seidel" << Index << ":\n" << x2.second;
-            std::cout << "\n\n------------------------------------\n\n";
-
-            if constexpr (Index % 10u == 0u)
-            {
-                utils::pause_clear("\nPress Enter to continue ELIMINATION...");
-            }
-        }
-        else
-        {
-            std::cout << "Skip weaklings " << (50u - Index) << "...\n";
-        }
-    });
-
-    cx_loops::static_for_s<100u>([] (const auto Index)
-    {
-        if constexpr (Index > 75u)
-        {
-            constexpr auto A = generate_matrix_with_diagonal_predominance<double, Index, Index>();
-            constexpr auto b = generate_matrix<double, Index, 1u>();
-            constexpr auto x1 = jacobi_solve(A, b, kEps);
-            constexpr auto x2 = seidel_solve(A, b, kEps);
-            std::cout << "Matrix A" << Index << ":\n" << A << "\n\n";
-            std::cout << "Matrix b" << Index << ":\n" << b << "\n\n";
-            std::cout << "Matrix x" << Index << ":\n" << x1.first << "\n\n";
-            std::cout << "Number of iterations Jacobi" << Index << ":\n" << x1.second << "\n\n";
-            std::cout << "Matrix x" << Index << ":\n" << x2.first << "\n\n";
-            std::cout << "Number of iterations Seidel" << Index << ":\n" << x2.second;
-            std::cout << "\n\n------------------------------------\n\n";
-
-            if constexpr (Index % 10u == 0u && Index != 100u)
-            {
-                utils::pause_clear("\nPress Enter to continue ELIMINATION...");
-            }
-        }
-        else
-        {
-            std::cout << "Kill enemies " << (75u - Index) << "...\n";
         }
     });
 }
@@ -342,7 +288,7 @@ TEST_METHOD(gen_test_diagonal_predominance)
 
 TEST_METHOD(gen_test_simmetrical)
 {
-    cx_loops::static_for_s<50u>([] (const auto Index)
+    cx_loops::static_for_s<10u>([] (const auto Index)
     {
         if constexpr (Index > 2u)
         {
@@ -358,7 +304,7 @@ TEST_METHOD(gen_test_simmetrical)
             std::cout << "Number of iterations Seidel" << Index << ":\n" << x2.second;
             std::cout << "\n\n------------------------------------\n\n";
 
-            if constexpr (Index % 10u == 0u)
+            if constexpr (Index % 5u == 0u)
             {
                 utils::pause_clear("\nPress Enter to continue ELIMINATION...");
             }            
@@ -368,60 +314,6 @@ TEST_METHOD(gen_test_simmetrical)
             using namespace std::chrono_literals;
             std::cout << "Initiate ELIMINATION " << (3u - Index) << "...\n";
             std::this_thread::sleep_for(1s);
-        }
-    });
-
-    cx_loops::static_for_s<75u>([] (const auto Index)
-    {
-        if constexpr (Index > 50u)
-        {
-            constexpr auto A = generate_matrix_simmetrical<double, Index, Index>();
-            constexpr auto b = generate_matrix<double, Index, 1u>();
-            constexpr auto x1 = jacobi_solve(A, b, kEps);
-            constexpr auto x2 = seidel_solve(A, b, kEps);
-            std::cout << "Matrix A" << Index << ":\n" << A << "\n\n";
-            std::cout << "Matrix b" << Index << ":\n" << b << "\n\n";
-            std::cout << "Matrix x" << Index << ":\n" << x1.first << "\n\n";
-            std::cout << "Number of iterations Jacobi" << Index << ":\n" << x1.second << "\n\n";
-            std::cout << "Matrix x" << Index << ":\n" << x2.first << "\n\n";
-            std::cout << "Number of iterations Seidel" << Index << ":\n" << x2.second;
-            std::cout << "\n\n------------------------------------\n\n";
-
-            if constexpr (Index % 10u == 0u)
-            {
-                utils::pause_clear("\nPress Enter to continue ELIMINATION...");
-            }
-        }
-        else
-        {
-            std::cout << "Skip weaklings " << (50u - Index) << "...\n";
-        }
-    });
-
-    cx_loops::static_for_s<100u>([] (const auto Index)
-    {
-        if constexpr (Index > 75u)
-        {
-            constexpr auto A = generate_matrix_simmetrical<double, Index, Index>();
-            constexpr auto b = generate_matrix<double, Index, 1u>();
-            constexpr auto x1 = jacobi_solve(A, b, kEps);
-            constexpr auto x2 = seidel_solve(A, b, kEps);
-            std::cout << "Matrix A" << Index << ":\n" << A << "\n\n";
-            std::cout << "Matrix b" << Index << ":\n" << b << "\n\n";
-            std::cout << "Matrix x" << Index << ":\n" << x1.first << "\n\n";
-            std::cout << "Number of iterations Jacobi" << Index << ":\n" << x1.second << "\n\n";
-            std::cout << "Matrix x" << Index << ":\n" << x2.first << "\n\n";
-            std::cout << "Number of iterations Seidel" << Index << ":\n" << x2.second;
-            std::cout << "\n\n------------------------------------\n\n";
-
-            if constexpr (Index % 10u == 0u && Index != 100u)
-            {
-                utils::pause_clear("\nPress Enter to continue ELIMINATION...");
-            }
-        }
-        else
-        {
-            std::cout << "Kill enemies " << (75u - Index) << "...\n";
         }
     });
 }
