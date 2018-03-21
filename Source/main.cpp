@@ -12,7 +12,7 @@
 #include "iterations_methods.hpp"
 
 
-// clnag parameter compilation: clang++ -std=c++1z -O2 -Xclang -flto-visibility-public-std -fconstexpr-steps=1000000000 -o main.exe main.cpp
+// clnag parameters compilation: clang++ -std=c++1z -O2 -Xclang -flto-visibility-public-std -fconstexpr-steps=1000000000 -o main.exe main.cpp
 int main()
 {
     utils::pause("Press Enter to initiate ELIMINATION");

@@ -61,7 +61,7 @@ template <class Type>
 constexpr Type kDefault_eps = static_cast<Type>(0.000001);
 
 constexpr int N = 12;
-constexpr double kEps = 0.0000000000001;
+constexpr double kEps = 0.00000001;
 
 // ===== DATA 1 (base tests) =====
 constexpr vv::matrix<double, 3u, 3u> data_N{ N + 2, 1,     1,
@@ -214,7 +214,7 @@ TEST_METHOD(general_test_condition_number)
     constexpr auto condition_number = mat_A.calculate_condition_number();
     std::cout << "Calculated condition number:\n\n";
     std::cout << "Matrix A:\n" << mat_A << "\n\n";
-    std::cout << "Condition number of matrix A:\n" << general_condition_number;
+    std::cout << "Condition number of matrix A:\n" << condition_number;
     std::cout << "\n\n------------------------------------\n\n";
 }
 

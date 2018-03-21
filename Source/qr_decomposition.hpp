@@ -87,20 +87,19 @@ TEST_METHOD(qr_test_decomposition)
     std::cout << "Matrix (Q * R):\n" << qr_product;
     std::cout << "\n\n------------------------------------\n\n";
 
-    // std::cout << "QR-solve:\n\n";
-    // constexpr auto rx = qr_value.at(1u);
-    // constexpr auto qTb = qr_value.at(0u).transpose() * vec_b;
-    // //constexpr auto vecX_qr = vv::matrix<double>::solve(rx, qTb, kEps);
-    // constexpr auto vecX_qr = vv::matrix<double>::backward_substitution(rx, qTb, kEps);
-    // std::cout << "Matrix solved with Gaussian (include eps):\n\n";
-    // std::cout << "Matrix (QT * b):\n" << qTb << "\n\n";
-    // std::cout << "Matrix x:\n" << vecX_qr;
-    // std::cout << "\n\n------------------------------------\n\n";
+    std::cout << "QR-solve:\n\n";
+    constexpr auto rx = qr_value.at(1u);
+    constexpr auto qTb = qr_value.at(0u).transpose() * vec_b;
+    constexpr auto vecX_qr = vv::matrix<double>::backward_substitution(rx, qTb, kEps);
+    std::cout << "Matrix solved with Gaussian (include eps):\n\n";
+    std::cout << "Matrix (QT * b):\n" << qTb << "\n\n";
+    std::cout << "Matrix x:\n" << vecX_qr;
+    std::cout << "\n\n------------------------------------\n\n";
 
-    // std::cout << "Checking QR-solve:\n\n";
-    // constexpr auto qr_solve_check = (rx * vecX_qr) - qTb;
-    // std::cout << "Result of (R * x - QT * b):\n" << qr_solve_check;
-    // std::cout << "\n\n------------------------------------\n\n";
+    std::cout << "Checking QR-solve:\n\n";
+    constexpr auto qr_solve_check = (rx * vecX_qr) - qTb;
+    std::cout << "Result of (R * x - QT * b):\n" << qr_solve_check;
+    std::cout << "\n\n------------------------------------\n\n";
 }
 
 #endif // ENABLE_TESTS_QR

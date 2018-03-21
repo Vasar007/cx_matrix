@@ -12,6 +12,12 @@
 #include "cx_math.h"
 
 
+/*
+ *
+ * As base for matrix class using https://github.com/akalicki/matrix
+ *
+ */
+
 namespace vv::detail
 {
 
@@ -337,7 +343,7 @@ public:
 
     constexpr value_type calculate_condition_number() const noexcept
     {
-        constexpr auto abs_plus = [](const value_type a, const value_type b)
+        constexpr auto abs_plus = [](const value_type& a, const value_type& b)
         {
             return cx::abs(a) + cx::abs(b);
         };
@@ -347,7 +353,7 @@ public:
         {
             const auto summ_in_row = detail::accumulate(std::begin(row), std::end(row),
                                                         value_type{}, abs_plus);
-            condition_number = *summ_in_row;
+            condition_number = std::max(condition_number, summ_in_row);
         }
 
         return condition_number;
@@ -690,6 +696,7 @@ public:
     }
 
 
+    // Not tested this method.
     void read_solutions_from_RREF(std::ostream& os)
     {
         std_matrix result(*this);
