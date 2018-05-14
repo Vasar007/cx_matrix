@@ -12,7 +12,11 @@ Inspired by https://www.youtube.com/watch?v=HMB9oXFobJc
 
 ## Compiling
 
-This project is compiled by clang v5.0.1 and parameters: *-std=c++1z -O3 -Xclang -flto-visibility-public-std -fconstexpr-steps=1000000000*
+This project is compiled by Clang v5.0.1 and parameters: *clang++ -std=c++1z -O2 -Wall -Wextra -pedantic -Xclang -flto-visibility-public-std -fconstexpr-steps=1000000000*
+
+Also it would be compiled by GCC v7.2 and higher.
+
+MSVC has some issues with constexpr statements and sometimes "Internal compiler error" occurs. But code could be compiled too.
 
 
 ## License information
