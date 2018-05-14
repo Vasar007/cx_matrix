@@ -1,4 +1,4 @@
-# CxMatrix
+# cx_matrix
 
 Constexpr matrices with computational mathematic methods. (#constexpr_ALL_the_things)
 Inspired by https://www.youtube.com/watch?v=HMB9oXFobJc
