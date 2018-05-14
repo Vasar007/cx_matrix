@@ -12,13 +12,16 @@
  *
  */
 
-namespace cx_random
+namespace vv::cx_random
 {
 
+namespace
+{
 
 // Additional constant because of compiler has limited number of constexpr steps.
 constexpr int MAX_DEPTH = 1000;
 
+}
 
 constexpr auto seed() noexcept
 {
@@ -34,7 +37,7 @@ constexpr auto seed() noexcept
 }
 
 
-template <class T = std::uint32_t>
+template <class T = std::uint64_t>
 struct PCG
 {
     using result_type = T;
@@ -60,14 +63,14 @@ struct PCG
     }
 
 private:
-    constexpr std::uint32_t pcg32_random_r() noexcept
+    constexpr std::uint64_t pcg32_random_r() noexcept
     {
         std::uint64_t oldstate = rng.state;
         // Advance internal state.
-        rng.state = oldstate * 6364136225ULL + (rng.inc|1); // 384679300
+        rng.state = oldstate * 6364136225ULL + (rng.inc | 1); // 384679300
         // Calculate output function (XSH RR), uses old state for max ILP.
-        std::uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
-        std::uint32_t rot = oldstate >> 59u;
+        std::uint64_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
+        std::uint64_t rot = oldstate >> 59u;
         return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
     }
 
@@ -76,7 +79,7 @@ private:
 
 constexpr auto get_random(int count) noexcept
 {
-    PCG pcg{};
+    PCG<> pcg{};
 
     if (count > MAX_DEPTH)
     {
@@ -92,15 +95,13 @@ constexpr auto get_random(int count) noexcept
     return pcg();
 }
 
-} // namespace cx_random
+} // vv::namespace cx_random
 
 /*
  * Example oof usage:
- *
  * int main()
  * {
  *     constexpr auto r = get_random(10);
  *     return r;
  * }
- *
  */

@@ -11,11 +11,11 @@
  *
  */
 
-namespace cx_loops
+namespace vv::cx_loops
 {
 
 template <typename F, std::size_t... S>
-constexpr void static_for_s(F&& function, std::index_sequence<S...>)
+constexpr void static_for(F&& function, std::index_sequence<S...>)
 {
     int unpack[] =
     {
@@ -27,34 +27,35 @@ constexpr void static_for_s(F&& function, std::index_sequence<S...>)
 }
 
 template <std::size_t iterations, typename F>
-constexpr void static_for_s(F&& function)
+constexpr void static_for(F&& function)
 {
-    static_for_s(std::forward<F>(function), std::make_index_sequence<iterations + 1u>());
+    static_for(std::forward<F>(function), std::make_index_sequence<iterations + 1u>());
 }
 
 
 // Not tested this variant of implementation constexpr for-loop.
 template <typename T>
 void static_consume(std::initializer_list<T>)
-{ }
+{
+}
 
 template<typename F, std::size_t... S>
-constexpr void static_for(F&& function, std::index_sequence<S...>)
+constexpr void static_for_s(F&& function, std::index_sequence<S...>)
 {
     return static_consume({ (function(std::integral_constant<std::size_t, S>{}), 0)... });
 }
 
-} // namespace cx_loops
+} // namespace vv::cx_loops
 
 /*
  * Example of usage:
  *
- *  cx_loops::static_for_s<10u>([] (const auto Index)
+ *  cx_loops::static_for<10>([] (const auto Index)
  *  {
  *      if constexpr (Index > 2u)
  *      {
  *          constexpr auto A = generate_matrix_with_diagonal_predominance<double, Index, Index>();
- *          constexpr auto b = generate_matrix<double, Index, 1u>();
+ *          constexpr auto b = generate_matrix<double, Index, 1>();
  *          constexpr auto x1 = jacobi_solve(A, b, kEps);
  *          constexpr auto x2 = seidel_solve(A, b, kEps);
  *          std::cout << "Matrix A" << Index << ":\n" << A << "\n\n";
