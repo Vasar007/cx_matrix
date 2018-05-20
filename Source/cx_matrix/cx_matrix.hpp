@@ -217,7 +217,7 @@ public:
     }
 
 
-    constexpr const const_pointer raw_data() const noexcept
+    constexpr const_pointer raw_data() const noexcept
     {
         return _data.data()->data();
     }
