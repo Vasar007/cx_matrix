@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cassert>
 #include <iterator>
+#include <type_traits>
 
 #include "cx_math.h"
 #include "cx_algorthms.hpp"
@@ -16,7 +17,8 @@
 
 /*
  *
- * As base for cx_matrix class using https://github.com/akalicki/matrix
+ * TODO:
+ * 1) Take out several functions (like gauss method) in a separate library.
  *
  */
 
@@ -27,34 +29,45 @@ template <class Type = double, std::size_t Rows = 1, std::size_t Columns = 1>
 class cx_matrix
 {
 public:
-    using value_type                    = Type;
-    using size_type                     = std::size_t;
-    using difference_type               = std::ptrdiff_t;
+    using value_type                     = Type;
+    using size_type                      = std::size_t;
+    using difference_type                = std::ptrdiff_t;
 
-    template <class ConType = value_type, std::size_t N = Rows>
-    using container                     = std::array<ConType, N>;
-    using row_container                 = container<value_type, Columns>;
-    using row_container_reference       = container<value_type, Columns>&;    
-    using const_row_container_reference = const container<value_type, Columns>&;
+    template <class ContType = value_type, std::size_t N = Rows>
+    using container                      = std::array<ContType, N>;
 
-    using pointer                       = value_type*;
-    using const_pointer                 = const value_type*;
+    using row_container                  = container<value_type, Columns>;
+    using row_container_reference        = container<value_type, Columns>&;
+    using const_row_container_reference  = const container<value_type, Columns>&;
 
-    using reference                     = value_type&;
-    using const_reference               = const value_type&;
+    using data_container                 = container<container<value_type, Columns>, Rows>;
+    using data_container_reference       = data_container&;
+    using const_data_container_reference = const data_container&;
+
+    using pointer                        = value_type*;
+    using const_pointer                  = const value_type*;
+
+    using reference                      = value_type&;
+    using const_reference                = const value_type&;
 
 
     static constexpr value_type EPS = static_cast<value_type>(1e-10);
 
+
     static_assert(std::is_arithmetic_v<value_type>, "Matrix elements type has to be arithmetic!");
     static_assert(Rows > 0 && Columns > 0, "Incorrect size parameters!");
 
+
     constexpr cx_matrix() noexcept = default;
+
 
     constexpr cx_matrix(const value_type value) noexcept
     : _data()
     {
-        detail::fill(std::begin(_data), std::end(_data), value);
+        for (auto& row : _data)
+        {
+            detail::fill(std::begin(row), std::end(row), value);
+        }
     }
 
     constexpr cx_matrix(const std::initializer_list<value_type> list) noexcept
@@ -114,27 +127,141 @@ public:
     }
 
 
-    constexpr const_reference operator()(const size_type i, const size_type j) const
+    constexpr typename data_container::iterator begin() noexcept
     {
-        return _data.at(i).at(j);
+        return _data.begin();
     }
 
 
-    constexpr reference operator()(const size_type i, const size_type j)
+    constexpr typename data_container::const_iterator begin() const noexcept
+    {
+        return _data.begin();
+    }
+
+
+    constexpr typename data_container::const_iterator cbegin() const noexcept
+    {
+        return _data.cbegin();
+    }
+
+
+    constexpr typename data_container::iterator end() noexcept
+    {
+        return _data.end();
+    }
+
+
+    constexpr typename data_container::const_iterator end() const noexcept
+    {
+        return _data.end();
+    }
+
+
+    constexpr typename data_container::const_iterator cend() const noexcept
+    {
+        return _data.cend();
+    }
+
+
+    constexpr typename data_container::reverse_iterator rbegin() noexcept
+    {
+        return _data.rbegin();
+    }
+
+
+    constexpr typename data_container::const_reverse_iterator rbegin() const noexcept
+    {
+        return _data.rbegin();
+    }
+
+
+    constexpr typename data_container::const_reverse_iterator crbegin() const noexcept
+    {
+        return _data.crbegin();
+    }
+
+
+    constexpr typename data_container::reverse_iterator rend() noexcept
+    {
+        return _data.rend();
+    }
+
+
+    constexpr typename data_container::const_reverse_iterator rend() const noexcept
+    {
+        return _data.rend();
+    }
+
+
+    constexpr typename data_container::const_reverse_iterator crend() const noexcept
+    {
+        return _data.crend();
+    }
+
+
+    constexpr data_container_reference data() noexcept
+    {
+        return _data;
+    }
+
+
+    constexpr const_data_container_reference data() const noexcept
+    {
+        return _data;
+    }
+
+
+    constexpr pointer raw_data() noexcept
+    {
+        return _data.data()->data();
+    }
+
+
+    constexpr const const_pointer raw_data() const noexcept
+    {
+        return _data.data()->data();
+    }
+
+
+    constexpr std::pair<size_type, size_type> size() const noexcept
+    {
+        return { get_rows_number(), get_columns_number() };
+    }
+
+
+    constexpr row_container_reference operator[](const size_type pos)
+    {
+        return _data[pos];
+    }
+
+
+    constexpr const_row_container_reference operator[](const size_type pos) const
+    {
+        return _data[pos];
+    }
+
+
+    constexpr row_container_reference at(const size_type i)
+    {
+        return _data.at(i);
+    }
+
+
+    constexpr const_row_container_reference at(const size_type i) const
+    {
+        return _data.at(i);
+    }
+
+
+    constexpr reference at(const size_type i, const size_type j)
     { 
         return _data.at(i).at(j);
     }
 
 
-    constexpr const_row_container_reference& operator()(const size_type i) const
+    constexpr const_reference at(const size_type i, const size_type j) const
     {
-        return _data.at(i);
-    }
-
-
-    constexpr row_container_reference& operator()(const size_type i)
-    {
-        return _data.at(i);
+        return _data.at(i).at(j);
     }
 
 
@@ -144,7 +271,7 @@ public:
         {
             for (size_type j = 0; j < Columns; ++j)
             {
-                _data.at(i).at(j) += rhs(i, j);
+                _data.at(i).at(j) += rhs.at(i, j);
             }
         }
         return *this;
@@ -157,7 +284,7 @@ public:
         {
             for (size_type j = 0; j < Columns; ++j)
             {
-                _data.at(i).at(j) -= rhs(i, j);
+                _data.at(i).at(j) -= rhs.at(i, j);
             }
         }
         return *this;
@@ -179,8 +306,7 @@ public:
 
     constexpr cx_matrix& operator/=(const value_type value)
     {
-        assert(value != value_type{});
-
+        //assert(value != value_type{});
         for (auto& row : _data)
         {
             for (auto& elem : row)
@@ -199,17 +325,34 @@ public:
     }
 
 
+    void swap(cx_matrix& other) noexcept(std::is_nothrow_swappable_v<container>)
+    {
+        std::swap(_data, other.data());
+    }
+
+
     constexpr void swap_rows(const size_type row_1, const size_type row_2) noexcept
     {
+        if (row_1 >= Rows || row_2 >= Rows) return;
         detail::swap(_data.at(row_1), _data.at(row_2));
     }
 
 
     constexpr void swap_columns(const size_type column_1, const size_type column_2) noexcept
     {
+        if (column_1 >= Columns || column_2 >= Columns) return;
         for (size_type i = 0; i < Rows; ++i)
         {
             detail::swap(_data.at(i).at(column_1), _data.at(i).at(column_2));
+        }
+    }
+
+
+    constexpr void fill(const value_type& value) noexcept
+    {
+        for (auto& row : _data)
+        {
+            detail::fill(std::begin(row), std::end(row), value);
         }
     }
     
@@ -221,7 +364,7 @@ public:
         {
             for (size_type j = 0; j < Columns; ++j)
             {
-                transp(j, i) = _data.at(i).at(j);
+                transp.at(j, i) = _data.at(i).at(j);
             }
         }
         return transp;
@@ -232,10 +375,9 @@ public:
                             const size_type start_column_index = 0,
                             const value_type eps = EPS) const noexcept
     {
-        if (start_row_index > Rows || start_column_index > Columns)
-        {
-            return false;
-        }
+        //assert(eps < value_type{});
+
+        if (start_row_index > Rows || start_column_index > Columns) return false;
 
         for (size_type i = start_row_index; i < Rows; ++i)
         {
@@ -247,7 +389,6 @@ public:
                 }
             }
         }
-
         return true;        
     }
 
@@ -302,6 +443,7 @@ public:
             return cx::abs(a) + cx::abs(b);
         };
 
+        // Using the norm of infinity for matrices.
         value_type condition_number{};
         for (const auto& row: _data)
         {
@@ -323,11 +465,11 @@ public:
             {
                 if (i == j)
                 {
-                    temp(i, j) = static_cast<T>(1);
+                    temp.at(i, j) = static_cast<T>(1);
                 }
                 else
                 {
-                    temp(i, j) = value_type{};
+                    temp.at(i, j) = value_type{};
                 }
             }
         }
@@ -342,13 +484,15 @@ public:
                              cx_matrix<value_type, Rows_, Columns_b> b,
                              const value_type eps = EPS)
     {
-        static_assert(Columns_b == 1, "Matrix contains more than one columns in right "
-                                       "hand side vector!");
+        //assert(eps < value_type{});
+
+        static_assert(Columns_b == 1, "Matrix contains more than one columns in right hand "
+                                      "side vector!");
 
         // Gaussian elimination.
         for (size_type i = 0; i < Rows_; ++i)
         {
-            if (cx::abs(A(i, i)) < eps)
+            if (cx::abs(A.at(i, i)) < eps)
             {
                 // Pivot ~ 0 => throw error.
                 throw std::domain_error("Error: the coefficient cx_matrix has 0 as a pivot.");
@@ -358,19 +502,19 @@ public:
             {
                 for (size_type k = i + 1; k < Columns_A; ++k)
                 {
-                    A(j, k) -= A(i, k) * (A(j, i) / A(i, i));
-                    if (cx::abs(A(j, k)) < eps)
+                    A.at(j, k) -= A.at(i, k) * (A.at(j, i) / A.at(i, i));
+                    if (cx::abs(A.at(j, k)) < eps)
                     {
-                        A(j, k) = value_type{};
+                        A.at(j, k) = value_type{};
                     }
                 }
 
-                b(j, 0) -= b(i, 0) * (A(j, i) / A(i, i));
-                if (cx::abs(A(j, 0)) < eps)
+                b.at(j, 0) -= b.at(i, 0) * (A.at(j, i) / A.at(i, i));
+                if (cx::abs(A.at(j, 0)) < eps)
                 {
-                    A(j, 0) = value_type{};
+                    A.at(j, 0) = value_type{};
                 }
-                A(j, i) = value_type{};
+                A.at(j, i) = value_type{};
             }
         } // for (size_type i = 0; i < Rows_; ++i)
 
@@ -384,6 +528,8 @@ public:
                               const cx_matrix<value_type, Rows_, Columns_b>& b,
                               const value_type eps = EPS)
     {
+        //assert(eps < value_type{});
+
         static_assert(Columns_b == 1, "Matrix contains more than one columns in right "
                                        "hand side vector!");
 
@@ -394,19 +540,16 @@ public:
             value_type sum{};
             for (size_type j = i + 1; j < Rows_; ++j)
             {
-                sum += A(i, j) * x(j, 0);
+                sum += A.at(i, j) * x.at(j, 0);
             }
 
-            x(i, 0) = (b(i, 0) - sum) / A(i, i);
-            if (cx::abs(x(i, 0)) < eps)
+            x.at(i, 0) = (b.at(i, 0) - sum) / A.at(i, i);
+            if (cx::abs(x.at(i, 0)) < eps)
             {
-                x(i, 0) = value_type{};
+                x.at(i, 0) = value_type{};
             }
 
-            if (i == 0)
-            {
-                break;
-            }
+            if (i == 0) break;
         } // for (size_type i = Rows_ - 1; ; --i)
         
         return x;
@@ -417,8 +560,8 @@ public:
         solve(const cx_matrix<value_type, Rows_, Columns_A>& A,
               const cx_matrix<value_type, Rows_, Columns_b>& b, const value_type eps = EPS)
     {
-        static_assert(Columns_b == 1, "Matrix contains more than one columns in right "
-                                      "hand side vector!");
+        static_assert(Columns_b == 1, "Matrix contains more than one columns in right hand "
+                                      "side vector!");
 
         const auto result_of_forw_subs = forward_substitution(A, b, eps);
 
@@ -437,7 +580,7 @@ public:
         value_type bandsBelow = static_cast<value_type>((coef - 1) / 2.0);
         for (size_type i = 0; i < Rows_A; ++i)
         {
-            if (A(i, i) == value_type{})
+            if (A.at(i, i) == value_type{})
             {
                 // Pivot ~0 => throw exception.
                 throw std::domain_error("Error: the coefficient cx_matrix has 0 as a "
@@ -446,32 +589,29 @@ public:
             for (size_type j = i + 1; j < Rows_A && j <= i + bandsBelow; ++j)
             {
                 size_type k = i + 1;
-                while (k < Columns_A && A(j, k))
+                while (k < Columns_A && A.at(j, k))
                 {
-                    A(j, k) -= A(i, k) * (A(j, i) / A(i, i));
+                    A.at(j, k) -= A.at(i, k) * A.at(j, i) / A.at(i, i);
                     ++k;
                 }
-                b(j, 0u) -= b(i, 0u) * (A(j, i) / A(i, i));
-                A(j, i) = value_type{};
+                b.at(j, 0) -= b.at(i, 0) * A.at(j, i) / A.at(i, i);
+                A.at(j, i) = value_type{};
             }
         }
 
         // Back substitution.
         cx_matrix<value_type, Rows_b, 1> x{};
-        x(Rows_b - 1, 0) = b(Rows_b - 1, 0) / A(Rows_b - 1, Rows_b - 1);
+        x.at(Rows_b - 1, 0) = b.at(Rows_b - 1, 0) / A.at(Rows_b - 1, Rows_b - 1);
         for (size_type i = Rows_b - 2; ; --i)
         {
             value_type sum{};
             for (size_type j = i + 1; j < Rows_b; ++j)
             {
-                sum += A(i, j) * x(j, 0);
+                sum += A.at(i, j) * x.at(j, 0);
             }
-            x(i, 0u) = (b(i, 0) - sum) / A(i, i);
+            x.at(i, 0) = (b.at(i, 0) - sum) / A.at(i, i);
 
-            if (i == 0)
-            {
-                break;
-            }
+            if (i == 0) break;
         }
 
         return x;
@@ -487,7 +627,7 @@ public:
         value_type sum{};
         for (size_type i = 0; i < Rows_; ++i)
         {
-            sum += (A(i, column) * B(i, column));
+            sum += A.at(i, column) * B.at(i, column);
         }
         return sum;
     }
@@ -507,11 +647,11 @@ public:
             {
                 if (j < Columns_A)
                 {
-                    AB(i, j) = A(i, j);
+                    AB.at(i, j) = A.at(i, j);
                 }
                 else
                 {
-                    AB(i, j) = B(i, j - Columns_B);
+                    AB.at(i, j) = B.at(i, j - Columns_B);
                 }
             }
         }
@@ -520,6 +660,8 @@ public:
 
     constexpr cx_matrix gaussian_eliminate(const value_type eps = EPS) const
     {
+        //assert(eps < value_type{});
+
         cx_matrix Ab(*this);
         int rows = Rows;
         int cols = Columns;
@@ -535,7 +677,7 @@ public:
             bool pivot_found = false;
             while (j < Acols && !pivot_found)
             {
-                if (Ab(i, j) != value_type{})
+                if (Ab.at(i, j) != value_type{})
                 { // Pivot not equal to 0.
                     pivot_found = true;
                 }
@@ -545,7 +687,7 @@ public:
                     value_type max_val{};
                     for (int k = i + 1; k < rows; ++k)
                     {
-                        value_type cur_abs = cx::abs(Ab(k, j));
+                        value_type cur_abs = cx::abs(Ab.at(k, j));
                         if (cur_abs > max_val)
                         {
                             max_row = k;
@@ -571,13 +713,13 @@ public:
                 {
                     for (int s = j + 1; s < cols; ++s)
                     {
-                        Ab(t, s) = Ab(t, s) - Ab(i, s) * (Ab(t, j) / Ab(i, j));
-                        if (Ab(t, s) < eps && Ab(t, s) > -1 * eps)
+                        Ab.at(t, s) = Ab.at(t, s) - Ab.at(i, s) * Ab.at(t, j) / Ab.at(i, j);
+                        if (cx::abs(Ab.at(t, s)) < eps)
                         {
-                            Ab(t, s) = value_type{};
+                            Ab.at(t, s) = value_type{};
                         }
                     }
-                    Ab(t, j) = value_type{};
+                    Ab.at(t, j) = value_type{};
                 }
             }
 
@@ -590,6 +732,8 @@ public:
 
     constexpr cx_matrix row_reduce_from_gaussian(const value_type eps = EPS) const
     {
+        //assert(eps < value_type{});
+
         cx_matrix result(*this);
         int rows = Rows;
         int cols = Columns;
@@ -604,7 +748,7 @@ public:
             int k = j - 1;
             while (k >= 0)
             {
-                if (result(i, k) != value_type{})
+                if (result.at(i, k) != value_type{})
                 {
                     j = k;
                 }
@@ -612,7 +756,7 @@ public:
             }
 
             // Zero out elements above pivots if pivot not 0.
-            if (result(i, j) != value_type{})
+            if (result.at(i, j) != value_type{})
             {
             
                 for (int t = i - 1; t >= 0; --t)
@@ -621,27 +765,26 @@ public:
                     {
                         if (s != j)
                         {
-                            result(t, s) = result(t, s) - result(i, s) 
-                                            * (result(t, j) / result(i, j));
-                            if (result(t, s) < eps && result(t, s) > -1 * eps)
+                            result.at(t, s) -= result.at(i, s) * result.at(t, j) / result.at(i, j);
+                            if (cx::abs(result.at(t, s)) < eps)
                             {
-                                result(t, s) = value_type{};
+                                result.at(t, s) = value_type{};
                             }
                         }
                     }
-                    result(t, j) = value_type{};
+                    result.at(t, j) = value_type{};
                 }
 
                 // Divide row by pivot.
                 for (int l = j + 1; l < cols; ++l)
                 {
-                    result(i, l) = result(i, l) / result(i, j);
-                    if (result(i, l) < eps && result(i, l) > -1 * eps)
+                    result.at(i, l) = result.at(i, l) / result.at(i, j);
+                    if (cx::abs(result.at(i, l)) < eps)
                     {
-                        result(i, l) = value_type{};
+                        result.at(i, l) = value_type{};
                     }
                 }
-                result(i, j) = static_cast<value_type>(1);
+                result.at(i, j) = static_cast<value_type>(1);
 
             }
 
@@ -653,99 +796,19 @@ public:
     }
 
 
-    // Not tested this method.
-    void read_solutions_from_RREF(std::ostream& os)
-    {
-        cx_matrix result(*this);
-
-        // Print number of solutions.
-        bool has_solutions = true;
-        bool dones_searching = false;
-        size_type i = 0;
-        while (!dones_searching && i < Rows)
-        {
-            bool allZeros = true;
-            for (size_type j = 0; j < Columns - 1; ++j)
-            {
-                if (result(i, j) != value_type{})
-                {
-                    allZeros = false;
-                }
-            }
-            if (allZeros && result(i, Columns - 1) != value_type{})
-            {
-                has_solutions = false;
-                os << "NO SOLUTIONS\n\n";
-                dones_searching = true;
-            }
-            else if (allZeros && result(i, Columns - 1) == value_type{})
-            {
-                os << "INFINITE SOLUTIONS\n\n";
-                dones_searching = true;
-            }
-            else if (Rows < Columns - 1)
-            {
-                os << "INFINITE SOLUTIONS\n\n";
-                dones_searching = true;
-            }
-            ++i;
-        }
-        if (!dones_searching)
-        {
-            os << "UNIQUE SOLUTION\n\n";
-        }
-
-        // Get solutions if they exist.
-        if (has_solutions)
-        {
-            cx_matrix<value_type, Columns - 1, 1> particular{};
-            cx_matrix<value_type, Columns - 1, 1> special{};
-
-            for (size_type j = 0; j < Rows; ++j)
-            {
-                bool pivotFound = false;
-                bool specialCreated = false;
-                for (size_type k = 0; k < Columns - 1; ++k)
-                {
-                    if (result(k, k) != value_type{})
-                    {
-                        // If pivot variable, add b to particular.
-                        if (!pivotFound)
-                        {
-                            pivotFound = true;
-                            particular(k, 0) = result(k, Columns - 1);
-                        }
-                        else
-                        { // Otherwise, add to special solution.
-                            if (!specialCreated)
-                            {
-                                special = cx_matrix<value_type, Columns - 1, 1>{};
-                                specialCreated = true;
-                            }
-                            special(k, 0) = -result(k, k);
-                        }
-                    }
-                }
-                os << "Special solution\n" << special << '\n';
-            }
-            os << "Particular solution:\n" << particular << '\n';
-        }
-    }
-
-
     constexpr cx_matrix inverse() const
     {
-        auto I = create_identity();
-        auto AI = augment(*this, I);
-        auto U = AI.gaussian_eliminate();
-        auto IAInverse = U.row_reduce_from_gaussian();
+        const auto I = create_identity();
+        const auto AI = augment(*this, I);
+        const auto U = AI.gaussian_eliminate();
+        const auto IAInverse = U.row_reduce_from_gaussian();
 
         cx_matrix AInverse{};
         for (size_type i = 0; i < Rows; ++i)
         {
             for (size_type j = 0; j < Columns; ++j)
             {
-                AInverse(i, j) = IAInverse(i, j + Columns);
+                AInverse.at(i, j) = IAInverse.at(i, j + Columns);
             }
         }
         return AInverse;
@@ -777,32 +840,6 @@ public:
     }
 
 
-    friend std::ostream& operator<<(std::ostream& os, const cx_matrix& mat)
-    {
-        os << "[" << mat.get_dimension() << "]\n";
-        for (const auto& row : mat._data)
-        {
-            std::copy(std::begin(row), std::end(row),
-                      std::ostream_iterator<value_type>(os, " "));
-            os << '\n';
-        }
-        return os;
-    }
-
-
-    friend std::istream& operator>>(std::istream& is, cx_matrix& mat)
-    {
-        for (auto& row : mat._data)
-        {
-            for (auto& elem : row)
-            {
-                is >> elem;
-            }
-        }
-        return is;
-    }
-
-
 private:
     constexpr auto _exp_helper(const cx_matrix& mat, const int value) const noexcept
     {
@@ -823,7 +860,7 @@ private:
         return mat * _exp_helper(mat * mat, (value - 1) / 2);
     }
 
-    container<container<value_type, Columns>, Rows> _data;
+    data_container _data;
 };
 
 
@@ -835,31 +872,65 @@ namespace detail::cx_matrix
 
 
 template <class value_type, std::size_t Rows, std::size_t Columns>
-constexpr cx_matrix<value_type, Rows, Columns> operator+(
-    const cx_matrix<value_type, Rows, Columns>& lhs,
-    const cx_matrix<value_type, Rows, Columns>& rhs) noexcept
+std::ostream& operator<<(std::ostream& os, const cx_matrix<value_type, Rows, Columns>& mat)
 {
-    cx_matrix<value_type, Rows, Columns> temp(lhs);
-    return (temp += rhs);
+    os << '[' << mat.get_dimension() << "]\n";
+    for (const auto& row : mat)
+    {
+        std::copy(std::begin(row), std::end(row),
+                  std::ostream_iterator<value_type>(os, " "));
+        os << '\n';
+    }
+    return os;
+}
+
+
+template <class value_type, std::size_t Rows, std::size_t Columns>
+std::istream& operator>>(std::istream& is, cx_matrix<value_type, Rows, Columns>& mat)
+{
+    for (auto& row : mat)
+    {
+        for (auto& elem : row)
+        {
+            is >> elem;
+        }
+    }
+    return is;
 }
 
 
 template <class value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator-(
-    const cx_matrix<value_type, Rows, Columns>& lhs,
+    cx_matrix<value_type, Rows, Columns> mat) noexcept
+{
+    return mat *= static_cast<value_type>(-1);
+}
+
+
+
+template <class value_type, std::size_t Rows, std::size_t Columns>
+constexpr cx_matrix<value_type, Rows, Columns> operator+(
+    cx_matrix<value_type, Rows, Columns> lhs,
     const cx_matrix<value_type, Rows, Columns>& rhs) noexcept
 {
-    cx_matrix<value_type, Rows, Columns> temp(lhs);
-    return (temp -= rhs);
+    return lhs += rhs;
+}
+
+
+template <class value_type, std::size_t Rows, std::size_t Columns>
+constexpr cx_matrix<value_type, Rows, Columns> operator-(
+    cx_matrix<value_type, Rows, Columns> lhs,
+    const cx_matrix<value_type, Rows, Columns>& rhs) noexcept
+{
+    return lhs -= rhs;
 }
 
 
 template <class value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator*(
-    const cx_matrix<value_type, Rows, Columns>& mat, const value_type value) noexcept
+    cx_matrix<value_type, Rows, Columns> mat, const value_type value) noexcept
 {
-    cx_matrix<value_type, Rows, Columns> temp(mat);
-    return (temp *= value);
+    return mat *= value;
 }
 
 
@@ -867,7 +938,7 @@ template <class value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator*(
     const value_type value, const cx_matrix<value_type, Rows, Columns>& mat) noexcept
 {
-    return (mat * value);
+    return mat * value;
 }
 
 
@@ -886,18 +957,18 @@ constexpr cx_matrix<value_type, Rows_lhs, Columns_rhs> operator*(
     {
         for (size_type k = 0; k < Mid_dimension; ++k)
         {
-            thatColumn.at(k) = rhs(k, j);
+            thatColumn.at(k) = rhs.at(k, j);
         }
 
         for (size_type i = 0; i < Rows_lhs; ++i)
         {
-            const auto thisRow = lhs(i);
+            const auto thisRow = lhs.at(i);
             value_type summand{};
             for (size_type k = 0; k < Mid_dimension; ++k)
             {
                 summand += thisRow.at(k) * thatColumn.at(k);
             }
-            result(i, j) = summand;
+            result.at(i, j) = summand;
         }
     }
     return result;
@@ -906,12 +977,10 @@ constexpr cx_matrix<value_type, Rows_lhs, Columns_rhs> operator*(
 
 template <class value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator/(
-    const cx_matrix<value_type, Rows, Columns>& mat, const value_type value)
+    cx_matrix<value_type, Rows, Columns> mat, const value_type value)
 {
-    assert(value != value_type{});
-
-    cx_matrix<value_type, Rows, Columns> temp(mat);
-    return (temp /= value);
+    //assert(value != value_type{});
+    return mat /= value;
 }
 
 
@@ -943,107 +1012,97 @@ constexpr bool operator!=(const cx_matrix<value_type, Rows, Columns>& lhs,
 
 /// Helpers operation
 template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator+(const detail::cx_matrix::container<value_type, N>& lhs,
-          const detail::cx_matrix::container<value_type, N>& rhs) noexcept
+constexpr detail::cx_matrix::container<value_type, N>
+    operator+(detail::cx_matrix::container<value_type, N> lhs,
+              const detail::cx_matrix::container<value_type, N>& rhs) noexcept
 {
-    detail::cx_matrix::container<value_type, N> temp(lhs);
-    for (std::size_t i = 0; i < temp.size(); ++i)
+    for (std::size_t i = 0; i < lhs.size(); ++i)
     {
-        temp.at(i) += rhs.at(i);
+        lhs.at(i) += rhs.at(i);
     }
-    return temp;
+    return lhs;
 }
 
 template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator+(const detail::cx_matrix::container<value_type, N>& cont, const value_type& value) noexcept
+constexpr detail::cx_matrix::container<value_type, N>
+    operator+(detail::cx_matrix::container<value_type, N> cont,
+              const value_type& value) noexcept
 {
-    detail::cx_matrix::container<value_type, N> temp(cont);
-    for (auto& elem : temp)
+    for (auto& elem : cont)
     {
         elem += value;
     }
-    return temp;
+    return cont;
 }
 
-template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator+(const value_type& value, const detail::cx_matrix::container<value_type, N>& cont) noexcept
-{
-    return operator+(cont, value);
-}
 
 template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator-(const detail::cx_matrix::container<value_type, N>& lhs,
-          const detail::cx_matrix::container<value_type, N>& rhs) noexcept
+constexpr detail::cx_matrix::container<value_type, N>
+    operator+(const value_type& value,
+              const detail::cx_matrix::container<value_type, N>& cont) noexcept
 {
-    detail::cx_matrix::container<value_type, N> temp(lhs);
-    for (std::size_t i = 0; i < temp.size(); ++i)
+    return cont + value;
+}
+
+
+template <class value_type, std::size_t N>
+constexpr detail::cx_matrix::container<value_type, N>
+    operator-(detail::cx_matrix::container<value_type, N> lhs,
+              const detail::cx_matrix::container<value_type, N>& rhs) noexcept
+{
+    for (std::size_t i = 0; i < lhs.size(); ++i)
     {
-        temp.at(i) -= rhs.at(i);
+        lhs.at(i) -= rhs.at(i);
     }
-    return temp;
+    return lhs;
 }
 
+
 template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator-(const detail::cx_matrix::container<value_type, N>& cont, const value_type& value) noexcept
+constexpr detail::cx_matrix::container<value_type, N>
+    operator-(detail::cx_matrix::container<value_type, N> cont, const value_type& value) noexcept
 {
-    detail::cx_matrix::container<value_type, N> temp(cont);
-    for (auto& elem : temp)
+    for (auto& elem : cont)
     {
         elem -= value;
     }
-    return temp;
+    return cont;
 }
 
-template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator-(const value_type& value, const detail::cx_matrix::container<value_type, N>& cont) noexcept
-{
-    return operator-(cont, value);
-}
 
 template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator*(const detail::cx_matrix::container<value_type, N>& cont, const value_type& value) noexcept
+constexpr detail::cx_matrix::container<value_type, N>
+    operator*(detail::cx_matrix::container<value_type, N> cont,
+              const value_type& value) noexcept
 {
-    detail::cx_matrix::container<value_type, N> temp(cont);
-    for (auto& elem : temp)
+    for (auto& elem : cont)
     {
         elem *= value;
     }
-    return temp;
+    return cont;
 }
 
+
 template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator*(const value_type& value, const detail::cx_matrix::container<value_type, N>& cont) noexcept
+constexpr detail::cx_matrix::container<value_type, N>
+    operator*(const value_type& value,
+              const detail::cx_matrix::container<value_type, N>& cont) noexcept
 {
-    return operator*(cont, value);
+    return cont * value;
 }
 
-template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator/(const detail::cx_matrix::container<value_type, N>& cont, const value_type& value)
-{
-    assert(value != value_type{});
 
-    detail::cx_matrix::container<value_type, N> temp(cont);
-    for (auto& elem : temp)
+template <class value_type, std::size_t N>
+constexpr detail::cx_matrix::container<value_type, N>
+    operator/(detail::cx_matrix::container<value_type, N> cont, const value_type& value)
+{
+    //assert(value != value_type{});
+
+    for (auto& elem : cont)
     {
         elem /= value;
     }
-    return temp;
-}
-
-template <class value_type, std::size_t N>
-detail::cx_matrix::container<value_type, N>
-operator/(const value_type& value, const detail::cx_matrix::container<value_type, N>& cont)
-{
-    return operator/(cont, value);
+    return cont;
 }
 
 } // namespace vv
