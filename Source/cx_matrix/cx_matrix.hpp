@@ -760,7 +760,6 @@ public:
             // Zero out elements above pivots if pivot not 0.
             if (result.at(i, j) != value_type{})
             {
-            
                 for (int t = i - 1; t >= 0; --t)
                 {
                     for (int s = 0; s < cols; ++s)
@@ -787,7 +786,6 @@ public:
                     }
                 }
                 result.at(i, j) = static_cast<value_type>(1);
-
             }
 
             --i;
