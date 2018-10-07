@@ -5,7 +5,6 @@ language: cpp
 
 os:
   - linux
-  - osx
 
 compiler:
   - gcc
@@ -28,17 +27,6 @@ branches:
 
 matrix:
   fast_finish: true
-
-matrix:
-  exclude:
-    - os:       osx
-      compiler: gcc
-
-    - os:  osx
-      env: TARGET_CPU=x86 BUILD_CONFIGURATION=Debug
-
-    - os:  osx
-      env: TARGET_CPU=x86 BUILD_CONFIGURATION=Release
 
 script:
   - mkdir build
