@@ -16,5 +16,13 @@ target_include_directories(cx_options PUBLIC
 )
 set_target_properties(cx_options PROPERTIES LINKER_LANGUAGE CXX)
 
-# Include sub-projects.
-add_subdirectory(cx_matrix)
+# Add cx_math library.
+add_library(cx_matrix
+    cx_matrix/cx_matrix.hpp
+)
+target_link_libraries(cx_matrix
+    cx_math
+    cx_options
+)
+set_target_properties(cx_matrix PROPERTIES LINKER_LANGUAGE CXX)
+
