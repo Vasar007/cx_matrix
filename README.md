@@ -1,5 +1,6 @@
 # cx_matrix
 
+[![Build Status](https://travis-ci.com/Vasar007/cx_matrix.svg?branch=master)](https://travis-ci.com/Vasar007/cx_matrix)
 [![CodeFactor](https://www.codefactor.io/repository/github/vasar007/cx_matrix/badge)](https://www.codefactor.io/repository/github/vasar007/cx_matrix)
 
 Constexpr matrices with computational mathematic methods. (#constexpr_ALL_the_things)
