@@ -1,12 +1,10 @@
-﻿cmake_minimum_required(VERSION 3.8)
+﻿set(LIBS_NAME, "cx_matrix_impl")
 
-project(cx_matrix_impl)
-
-add_library(${PROJECT_NAME}
+add_library(${LIBS_NAME}
     cx_matrix.hpp
 )
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${LIBS_NAME}
     cx_math
     cx_options
 )
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(${LIBS_NAME} PROPERTIES LINKER_LANGUAGE CXX)
