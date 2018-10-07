@@ -269,3 +269,4 @@ __pycache__/
 # Additional dependencies
 [Dd]ependencies/
 [Bb]uild/
+.vscode/
