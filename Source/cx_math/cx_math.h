@@ -1,3 +1,5 @@
+// Copyright (C) 2015-2018 Ben Deane (http://www.elbeno.com)
+
 #pragma once
 
 #include <limits>

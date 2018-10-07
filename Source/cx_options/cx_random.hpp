@@ -1,3 +1,5 @@
+// Copyright (C) 2018 Vasily Vasilyev (vasar007@yandex.ru)
+
 #pragma once
 
 #include <cstdint>
@@ -73,7 +75,6 @@ private:
         std::uint64_t rot = oldstate >> 59u;
         return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
     }
-
 };
 
 
