@@ -75,7 +75,6 @@ private:
         std::uint64_t rot = oldstate >> 59u;
         return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
     }
-
 };
 
 
