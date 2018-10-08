@@ -28,9 +28,10 @@ branches:
 matrix:
   fast_finish: true
 
+before_install:
+  - .travis/os_setup.sh
+
 script:
   - mkdir build
   - cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DTARGET_CPU=$TARGET_CPU
-  - cmake --build .
-  - ctest --output-on-failure
+  - .travis/build.sh
