@@ -32,6 +32,4 @@ install:
   - bash .travis/os_setup.sh
 
 script:
-  - mkdir build
-  - cd build
   - bash .travis/build.sh
