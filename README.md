@@ -15,7 +15,7 @@ Inspired by [this talk](https://www.youtube.com/watch?v=HMB9oXFobJc).
 
 ## Compiling
 
-This project is compiled by Clang v5.0.0 and parameters: *clang++ -std=c++1z -O2 -Wall -Wextra -pedantic -Xclang -flto-visibility-public-std -fconstexpr-steps=1000000000*
+This project is compiled by Clang v5.0.0 and parameters: *clang++ -std=c++1z -O1 -Wall -Wextra -pedantic -Xclang -flto-visibility-public-std -fconstexpr-steps=1000000000*.
 
 Also it would be compiled by GCC v7.1 and higher.
 
@@ -25,4 +25,4 @@ You can play with code [here](https://godbolt.org/#z:OYLghAFBqd5QCxAYwPYBMCmBRdB
 
 ## License information
 
-This project is licensed under the terms of the [MIT License](LICENSE).
+This project is licensed under the terms of the [Apache License 2.0](LICENSE).
