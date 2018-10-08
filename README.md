@@ -1,10 +1,11 @@
 # cx_matrix
 
+[![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/Vasar007/cx_matrix/blob/master/LICENSE)
 [![Build Status](https://travis-ci.com/Vasar007/cx_matrix.svg?branch=master)](https://travis-ci.com/Vasar007/cx_matrix)
 [![CodeFactor](https://www.codefactor.io/repository/github/vasar007/cx_matrix/badge)](https://www.codefactor.io/repository/github/vasar007/cx_matrix)
 
 Constexpr matrices with computational mathematic methods. (#constexpr_ALL_the_things)
-Inspired by [this talk](https://www.youtube.com/watch?v=HMB9oXFobJc)
+Inspired by [this talk](https://www.youtube.com/watch?v=HMB9oXFobJc).
 
 ## Screenshots
 
