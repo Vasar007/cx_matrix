@@ -34,4 +34,4 @@ install:
 script:
   - mkdir build
   - cd build
-  - .travis/build.sh
+  - bash .travis/build.sh
