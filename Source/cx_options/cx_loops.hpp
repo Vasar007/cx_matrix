@@ -11,45 +11,6 @@
  *
  * Get a hint from https://stackoverflow.com/questions/37602057/why-isnt-a-for-loop-a-compile-time-expression
  *
- */
-
-namespace vv::cx_loops
-{
-
-template <typename F, std::size_t... S>
-constexpr void static_for(F&& function, std::index_sequence<S...>)
-{
-    int unpack[] =
-    {
-        0,
-        (function(std::integral_constant<std::size_t, S>{}), void(), 0)...
-    };
-
-    (void)unpack;
-}
-
-template <std::size_t iterations, typename F>
-constexpr void static_for(F&& function)
-{
-    static_for(std::forward<F>(function), std::make_index_sequence<iterations + 1u>());
-}
-
-
-// Not tested this variant of implementation constexpr for-loop.
-template <typename T>
-void static_consume(std::initializer_list<T>)
-{
-}
-
-template<typename F, std::size_t... S>
-constexpr void static_for_s(F&& function, std::index_sequence<S...>)
-{
-    return static_consume({ (function(std::integral_constant<std::size_t, S>{}), 0)... });
-}
-
-} // namespace vv::cx_loops
-
-/*
  * Example of usage:
  *
  *  cx_loops::static_for<10>([] (const auto Index)
@@ -75,3 +36,26 @@ constexpr void static_for_s(F&& function, std::index_sequence<S...>)
  *  });
  *
  */
+
+namespace vv::cx_loops
+{
+
+template <typename F, std::size_t... S>
+constexpr void static_for(F&& function, std::index_sequence<S...>)
+{
+    int unpack[] =
+    {
+        0,
+        (function(std::integral_constant<std::size_t, S>{}), void(), 0)...
+    };
+
+    (void)unpack;
+}
+
+template <std::size_t iterations, typename F>
+constexpr void static_for(F&& function)
+{
+    static_for(std::forward<F>(function), std::make_index_sequence<iterations + 1u>());
+}
+
+} // namespace vv::cx_loops

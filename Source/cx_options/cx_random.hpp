@@ -12,7 +12,14 @@
  * Origin video: https://www.youtube.com/watch?v=rpn_5Mrrxf8
  * Origin source code: https://godbolt.org/g/zbWvXK
  *
+ * Example of usage:
+ * int main()
+ * {
+ *     constexpr auto r = get_random(10);
+ *     return r;
+ * }
  */
+
 
 namespace vv::cx_random
 {
@@ -44,11 +51,15 @@ struct PCG
 {
     using result_type = T;
     
-    struct pcg32_random_t { std::uint64_t state=0;  std::uint64_t inc=seed(); };
+    struct pcg32_random_t
+    {
+        std::uint64_t state = 0;
+        std::uint64_t inc = seed();
+    };
 
     pcg32_random_t rng;
 
-    
+
     constexpr result_type operator()() noexcept
     {
         return pcg32_random_r();
@@ -97,12 +108,3 @@ constexpr auto get_random(int count) noexcept
 }
 
 } // vv::namespace cx_random
-
-/*
- * Example oof usage:
- * int main()
- * {
- *     constexpr auto r = get_random(10);
- *     return r;
- * }
- */
