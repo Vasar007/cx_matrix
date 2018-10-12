@@ -1,4 +1,4 @@
-// Copyright (C) 2018 Vasily Vasilyev (vasar007@yandex.ru)
+// Copyright (C) 2018, need to remove after add constexpr-ness to <algorithm>
 
 #pragma once
 
