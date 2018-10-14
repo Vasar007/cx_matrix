@@ -32,7 +32,7 @@ elseif ("${TARGET_CPU}" STREQUAL "x86")
         set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -m32")
     endif()
 else ()
-    message (FATAL_ERROR "Unsupported CPU: ${TARGET_CPU}")
+    message(FATAL_ERROR "Unsupported CPU: ${TARGET_CPU}")
 endif()
 
 # Include sub-projects.
