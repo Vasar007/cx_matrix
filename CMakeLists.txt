@@ -1,15 +1,14 @@
 ﻿cmake_minimum_required(VERSION 3.8)
-
 project(cx_matrix)
 
 # Set compiler options.
 if (MSVC)
     add_compile_options(/W4)
 else ()
-    if (GCC)
-        add_compile_options(-Wall -Wextra -pedantic -fconstexpr-loop-limit=1000000000)
-    else ()
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         add_compile_options(-Wall -Wextra -pedantic -fconstexpr-steps=1000000000)
+    else ()
+        add_compile_options(-Wall -Wextra -pedantic -fconstexpr-loop-limit=1000000000)
     endif()
 endif()
 
@@ -28,7 +27,7 @@ elseif ("${TARGET_CPU}" STREQUAL "x86")
     set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS FALSE)
     set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB32_PATHS TRUE)
 
-    if (GCC)
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
         set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -m32")
     endif()
