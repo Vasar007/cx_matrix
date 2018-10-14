@@ -1,14 +1,13 @@
 ﻿cmake_minimum_required(VERSION 3.8)
-
 project(cx_matrix)
 
 # Set compiler options.
 if (MSVC)
     add_compile_options(/W4)
 else ()
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         add_compile_options(-Wall -Wextra -pedantic -fconstexpr-steps=1000000000)
-    else()
+    else ()
         add_compile_options(-Wall -Wextra -pedantic -fconstexpr-loop-limit=1000000000)
     endif()
 endif()
@@ -33,7 +32,7 @@ elseif ("${TARGET_CPU}" STREQUAL "x86")
         set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -m32")
     endif()
 else ()
-    message (FATAL_ERROR "Unsupported CPU: ${TARGET_CPU}")
+    message(FATAL_ERROR "Unsupported CPU: ${TARGET_CPU}")
 endif()
 
 # Include sub-projects.

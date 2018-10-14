@@ -7,6 +7,9 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     sudo apt-get update -qq
 
     sudo apt-get install -qq g++-7
+    if [ "$TARGET_CPU" == "x86" ]; then
+        sudo apt-get install -y g++-7-multilib
+    fi
     sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 
     CMAKE_VERSION=3.8.2
