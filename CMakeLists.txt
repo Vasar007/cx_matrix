@@ -27,7 +27,7 @@ elseif ("${TARGET_CPU}" STREQUAL "x86")
     set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS FALSE)
     set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB32_PATHS TRUE)
 
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if (GCC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
         set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -m32")
     endif()

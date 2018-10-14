@@ -2,11 +2,14 @@
 
 set -x
 
-if ["$TRAVIS_OS_NAME" == "linux"]; then
+if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update -qq
 
     sudo apt-get install -qq g++-7
+    if [ "$TARGET_CPU" == "x86" ]; then
+        sudo apt-get install -y g++-7-multilib
+    fi
     sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 
     CMAKE_VERSION=3.8.2
@@ -21,11 +24,4 @@ if ["$TRAVIS_OS_NAME" == "linux"]; then
     mkdir -p $CMAKE_DIR
     tar --strip-components=1 -xzf $CMAKE_TAR -C $CMAKE_DIR
     export PATH=$CMAKE_DIR/bin:$PATH
-fi
-
-if ["$TARGET_CPU" == "x86"]; then
-    sudo dpkg --add-architecture i386
-    sudo apt-get -qq update
-
-    sudo apt-get install -y g++-7-multilib
 fi
