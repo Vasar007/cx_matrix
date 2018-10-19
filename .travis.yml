@@ -29,7 +29,7 @@ matrix:
   fast_finish: true
 
 install:
-  - bash .travis/os_setup.sh
+  - bash .travis/install.sh
 
 script:
   - bash .travis/build.sh
