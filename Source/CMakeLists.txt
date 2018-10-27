@@ -17,10 +17,10 @@ target_include_directories(cx_options PUBLIC
 set_target_properties(cx_options PROPERTIES LINKER_LANGUAGE CXX)
 
 # Add cx_math library.
-add_library(cx_matrix
+add_library(cx_matrix STATIC
     cx_matrix/cx_matrix.hpp
 )
-target_link_libraries(cx_matrix
+target_link_libraries(cx_matrix PUBLIC
     cx_math
     cx_options
 )
