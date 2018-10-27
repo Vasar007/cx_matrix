@@ -25,4 +25,3 @@ target_link_libraries(cx_matrix PUBLIC
     cx_options
 )
 set_target_properties(cx_matrix PROPERTIES LINKER_LANGUAGE CXX)
-
