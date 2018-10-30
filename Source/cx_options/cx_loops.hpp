@@ -8,7 +8,6 @@
 
 
 /*
- *
  * Get a hint from https://stackoverflow.com/questions/37602057/why-isnt-a-for-loop-a-compile-time-expression
  *
  * Example of usage:

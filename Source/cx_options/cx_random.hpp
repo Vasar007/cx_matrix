@@ -7,7 +7,6 @@
 
 
 /*
- *
  * Special thanks to Jason Turner for this constexpr random!
  * Origin video: https://www.youtube.com/watch?v=rpn_5Mrrxf8
  * Origin source code: https://godbolt.org/g/zbWvXK
@@ -46,7 +45,7 @@ constexpr auto seed() noexcept
 }
 
 
-template <class T = std::uint64_t>
+template <typename T = std::uint64_t>
 struct PCG
 {
     using result_type = T;
