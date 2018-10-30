@@ -27,7 +27,7 @@
 namespace vv
 {
 /// ===== CONSTEXPR MATRIX IMLEMENTATION SECTION =====
-template <class Type = double, std::size_t Rows = 1, std::size_t Columns = 1>
+template <typename Type = double, std::size_t Rows = 1, std::size_t Columns = 1>
 class cx_matrix
 {
 public:
@@ -35,7 +35,7 @@ public:
     using size_type                      = std::size_t;
     using difference_type                = std::ptrdiff_t;
 
-    template <class ContType = value_type, std::size_t N = Rows>
+    template <typename ContType = value_type, std::size_t N = Rows>
     using container                      = std::array<ContType, N>;
 
     using row_container                  = container<value_type, Columns>;
@@ -457,7 +457,7 @@ public:
     }
 
 
-    template <class T = value_type, std::size_t Size = Rows>
+    template <typename T = value_type, std::size_t Size = Rows>
     static constexpr cx_matrix<T, Size, Size> create_identity() noexcept
     {
         cx_matrix<T, Size, Size> temp{};
@@ -828,7 +828,7 @@ public:
     }
 
 
-    template <class T = value_type, std::size_t Rows_E = Rows, std::size_t Columns_E = Columns>
+    template <typename T = value_type, std::size_t Rows_E = Rows, std::size_t Columns_E = Columns>
     static constexpr cx_matrix<T, Rows_E, Columns_E> get_error_matrix() noexcept
     {
         cx_matrix<T, Rows_E, Columns_E> err_matrix{};
@@ -866,12 +866,12 @@ private:
 
 namespace detail::cx_matrix
 {
-    template <class Type, std::size_t N>
+    template <typename Type, std::size_t N>
     using container = std::array<Type, N>;
 } // namespace detail::matrix
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 std::ostream& operator<<(std::ostream& os, const cx_matrix<value_type, Rows, Columns>& mat)
 {
     os << '[' << mat.get_dimension() << "]\n";
@@ -885,7 +885,7 @@ std::ostream& operator<<(std::ostream& os, const cx_matrix<value_type, Rows, Col
 }
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 std::istream& operator>>(std::istream& is, cx_matrix<value_type, Rows, Columns>& mat)
 {
     for (auto& row : mat)
@@ -899,7 +899,7 @@ std::istream& operator>>(std::istream& is, cx_matrix<value_type, Rows, Columns>&
 }
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator-(
     cx_matrix<value_type, Rows, Columns> mat) noexcept
 {
@@ -908,7 +908,7 @@ constexpr cx_matrix<value_type, Rows, Columns> operator-(
 
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator+(
     cx_matrix<value_type, Rows, Columns> lhs,
     const cx_matrix<value_type, Rows, Columns>& rhs) noexcept
@@ -917,7 +917,7 @@ constexpr cx_matrix<value_type, Rows, Columns> operator+(
 }
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator-(
     cx_matrix<value_type, Rows, Columns> lhs,
     const cx_matrix<value_type, Rows, Columns>& rhs) noexcept
@@ -926,7 +926,7 @@ constexpr cx_matrix<value_type, Rows, Columns> operator-(
 }
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator*(
     cx_matrix<value_type, Rows, Columns> mat, const value_type value) noexcept
 {
@@ -934,7 +934,7 @@ constexpr cx_matrix<value_type, Rows, Columns> operator*(
 }
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator*(
     const value_type value, const cx_matrix<value_type, Rows, Columns>& mat) noexcept
 {
@@ -942,7 +942,7 @@ constexpr cx_matrix<value_type, Rows, Columns> operator*(
 }
 
 
-template <class value_type, std::size_t Rows_lhs, std::size_t Mid_dimension,
+template <typename value_type, std::size_t Rows_lhs, std::size_t Mid_dimension,
           std::size_t Columns_rhs>
 constexpr cx_matrix<value_type, Rows_lhs, Columns_rhs> operator*(
     const cx_matrix<value_type, Rows_lhs, Mid_dimension>& lhs,
@@ -975,7 +975,7 @@ constexpr cx_matrix<value_type, Rows_lhs, Columns_rhs> operator*(
 }
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 constexpr cx_matrix<value_type, Rows, Columns> operator/(
     cx_matrix<value_type, Rows, Columns> mat, const value_type value)
 {
@@ -984,7 +984,7 @@ constexpr cx_matrix<value_type, Rows, Columns> operator/(
 }
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 constexpr bool operator==(const cx_matrix<value_type, Rows, Columns>& lhs,
                           const cx_matrix<value_type, Rows, Columns>& rhs) noexcept
 {
@@ -1002,7 +1002,7 @@ constexpr bool operator==(const cx_matrix<value_type, Rows, Columns>& lhs,
 }
 
 
-template <class value_type, std::size_t Rows, std::size_t Columns>
+template <typename value_type, std::size_t Rows, std::size_t Columns>
 constexpr bool operator!=(const cx_matrix<value_type, Rows, Columns>& lhs,
                           const cx_matrix<value_type, Rows, Columns>& rhs) noexcept
 {
@@ -1011,7 +1011,7 @@ constexpr bool operator!=(const cx_matrix<value_type, Rows, Columns>& lhs,
 
 
 /// Helpers operation
-template <class value_type, std::size_t N>
+template <typename value_type, std::size_t N>
 constexpr detail::cx_matrix::container<value_type, N>
     operator+(detail::cx_matrix::container<value_type, N> lhs,
               const detail::cx_matrix::container<value_type, N>& rhs) noexcept
@@ -1023,7 +1023,7 @@ constexpr detail::cx_matrix::container<value_type, N>
     return lhs;
 }
 
-template <class value_type, std::size_t N>
+template <typename value_type, std::size_t N>
 constexpr detail::cx_matrix::container<value_type, N>
     operator+(detail::cx_matrix::container<value_type, N> cont,
               const value_type& value) noexcept
@@ -1036,7 +1036,7 @@ constexpr detail::cx_matrix::container<value_type, N>
 }
 
 
-template <class value_type, std::size_t N>
+template <typename value_type, std::size_t N>
 constexpr detail::cx_matrix::container<value_type, N>
     operator+(const value_type& value,
               const detail::cx_matrix::container<value_type, N>& cont) noexcept
@@ -1045,7 +1045,7 @@ constexpr detail::cx_matrix::container<value_type, N>
 }
 
 
-template <class value_type, std::size_t N>
+template <typename value_type, std::size_t N>
 constexpr detail::cx_matrix::container<value_type, N>
     operator-(detail::cx_matrix::container<value_type, N> lhs,
               const detail::cx_matrix::container<value_type, N>& rhs) noexcept
@@ -1058,7 +1058,7 @@ constexpr detail::cx_matrix::container<value_type, N>
 }
 
 
-template <class value_type, std::size_t N>
+template <typename value_type, std::size_t N>
 constexpr detail::cx_matrix::container<value_type, N>
     operator-(detail::cx_matrix::container<value_type, N> cont, const value_type& value) noexcept
 {
@@ -1070,7 +1070,7 @@ constexpr detail::cx_matrix::container<value_type, N>
 }
 
 
-template <class value_type, std::size_t N>
+template <typename value_type, std::size_t N>
 constexpr detail::cx_matrix::container<value_type, N>
     operator*(detail::cx_matrix::container<value_type, N> cont,
               const value_type& value) noexcept
@@ -1083,7 +1083,7 @@ constexpr detail::cx_matrix::container<value_type, N>
 }
 
 
-template <class value_type, std::size_t N>
+template <typename value_type, std::size_t N>
 constexpr detail::cx_matrix::container<value_type, N>
     operator*(const value_type& value,
               const detail::cx_matrix::container<value_type, N>& cont) noexcept
@@ -1092,7 +1092,7 @@ constexpr detail::cx_matrix::container<value_type, N>
 }
 
 
-template <class value_type, std::size_t N>
+template <typename value_type, std::size_t N>
 constexpr detail::cx_matrix::container<value_type, N>
     operator/(detail::cx_matrix::container<value_type, N> cont, const value_type& value)
 {
