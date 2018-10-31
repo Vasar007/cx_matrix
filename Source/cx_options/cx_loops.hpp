@@ -39,7 +39,7 @@
 namespace vv::cx_loops
 {
 
-template <typename F, std::size_t... S>
+template <class F, std::size_t... S>
 constexpr void static_for(F&& function, std::index_sequence<S...>)
 {
     int unpack[] =
@@ -51,7 +51,7 @@ constexpr void static_for(F&& function, std::index_sequence<S...>)
     (void)unpack;
 }
 
-template <std::size_t iterations, typename F>
+template <std::size_t iterations, class F>
 constexpr void static_for(F&& function)
 {
     static_for(std::forward<F>(function), std::make_index_sequence<iterations + 1u>());
