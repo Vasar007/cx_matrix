@@ -45,7 +45,7 @@ constexpr auto seed() noexcept
 }
 
 
-template <typename T = std::uint64_t>
+template <class T = std::uint64_t>
 struct PCG
 {
     using result_type = T;
